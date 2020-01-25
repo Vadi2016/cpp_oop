@@ -65,8 +65,8 @@ public:
     bool push(int n)
     {
         if (length <= 10) {
-            length++;
             arr[length] = n;
+            length++;
             return true;
         }
         return false;
