@@ -64,36 +64,22 @@ public:
     
     bool push(int n)
     {
-        
-        for (int i = 0;i < 10; ++i)
-        {
-            if (arr[i] == 0) {
-                arr[i] = n;
-                return true;
-            }
+        if (length <= 10) {
+            length++;
+            arr[length] = n;
+            return true;
         }
-        
         return false;
     }
     
     int pop()
     {
-        try
-        {
-            for (int i = 10; i >= 0; --i)
-            {
-                if (arr[i] > 0)
-                {
-                    arr[i] = 0;
-                    return 0;
-                }
-            }
-            throw;
+        if (length != 0) {
+            --length;
+            arr[length] = 0;
+            return 0;
         }
-        catch (...)
-        {
-            cout << "Stack is empty!" << endl;
-        }
+        cout << "Stack is empty!" << endl;
         return 1;
     }
     
