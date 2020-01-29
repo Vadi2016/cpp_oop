@@ -258,8 +258,19 @@ int main(int argc, char** args)
 
 
 // task 3
-// получилось 5 классов
-class Player
+// получилось 7 классов
+
+class Card
+{
+    
+};
+
+class Hand
+{
+    
+}
+
+class Player: Hand
 {
     
 };
@@ -274,11 +285,10 @@ class Person: public Player
     
 };
 
-class Card
+class Deck: public Hand
 {
     
-};
-
+}
 
 class Game
 {
