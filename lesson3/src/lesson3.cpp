@@ -156,70 +156,19 @@ public:
         return denominator;
     }
     
-    void translate(double num, double eps, int &ch, int &zn)
+    Fraction operator-()
     {
+        double num = 1 - numerator/denominator;
+        double zn = 1 * 1000000;
+        num *= 1000000;
+        cout << (int)num / 2 << endl;
+        while ((int)num % 2 ==0)
+        {
+            num /= 2;
+            zn /= 2;
+        }
         
-        int a = 1;
-        int b = 1;
-        int mn = 2;
-        int iter = 0;
-        double k = 0;
-        ch = a;
-        zn = b;
-        double c = 1;
-        do {
-            b++;
-            c = (double)a / b;
-            k = num - c;
-        } while (k < 0);
-        k = num - c;
-        if (k < eps)
-        {
-          ch = a; zn = b;
-          return;
-        }
-        b -= 1;
-        c = (double)a / b;
-        k = num - c;
-        if (k > -eps)
-        {
-          ch = a; zn = b;
-          return;
-        }
-        while (iter < 20000)
-        {
-          int cc = a*mn, zz = b*mn;
-          iter++;
-          do {
-            zz++;
-            c = (double)cc / zz;
-            k = num - c;
-          } while (k < 0);
-            k = num - c;
-          if (k < eps)
-          {
-            ch = cc; zn = zz;
-            return;
-          }
-          zz -= 1;
-          c = (double)cc / zz;
-            k = num - c;
-          if (k > -eps)
-          {
-            ch = cc; zn = zz;
-            return;
-          }
-          mn++;
-        }
-    }
-    
-    Fraction operator-(double num)
-    {
-        double i = numerator/denominator - num;
-        double eps = 0.0000001;
-        int ch, zn;
-        translate(i, eps, ch, zn);
-        return Fraction(ch, zn);
+        return Fraction(num, zn);
     }
 };
 
@@ -250,7 +199,7 @@ bool operator==(const Fraction &f1, const Fraction &f2)
 
 bool operator!=(const Fraction &f1, const Fraction &f2)
 {
-    return f1.getNumerator() != f2.getNumerator() && f1.getDenominator() != f2.getDenominator();
+    return !(f1 == f2);
 }
 
 bool operator<(const Fraction &f1, const Fraction &f2)
@@ -274,7 +223,41 @@ bool operator>=(const Fraction &f1, const Fraction &f2)
 }
 
 
-
+//task 4
+class Card
+{
+private:
+    enum suit { HEARTS, DIAMONDS, SPADES, CLUBS };
+    enum value { ACE = 1, KING, QUEEN, JACK, JOKER, TEN, NINE, EIGHT, SEVEN, SIX, FIVE, FOUR, THREE };
+    bool situation;
+public:
+    bool Flip()
+    {
+        if (situation)
+            situation = false;
+        else
+            situation = true;
+        return situation;
+    }
+    
+    int GetValue(int val) const
+    {
+        switch (val) {
+            case 1:
+                return ACE;
+                break;
+            case 2:
+                return KING;
+                break;
+            case 3:
+                return QUEEN;
+                break;
+            default:
+                break;
+        }
+        return 0;
+    }
+};
 
 
 int main(int argc, char** args) 
@@ -317,7 +300,7 @@ int main(int argc, char** args)
     fractionResult = f2 / f1;
     cout << "\nDivision: \n" << fractionResult.getNumerator() << "/" << fractionResult.getDenominator() << endl;
     
-    fractionResult = f1-1;
+    fractionResult = -f1;
     cout << "\nFraction unary operator `-`: \n" << fractionResult.getNumerator() << "/" << fractionResult.getDenominator() << endl;
     
     
@@ -351,38 +334,4 @@ int main(int argc, char** args)
 }
 
 
-//task 4
-class Card
-{
-private:
-    enum suit { HEARTS, DIAMONDS, SPADES, CLUBS };
-    enum value { ACE = 1, KING, QUEEN, JACK, JOKER, TEN, NINE, EIGHT, SEVEN, SIX, FIVE, FOUR, THREE };
-    bool situation;
-public:
-    bool Flip()
-    {
-        if (situation)
-            situation = false;
-        else
-            situation = true;
-        return situation;
-    }
-    
-    int GetValue(int val) const
-    {
-        switch (val) {
-            case 1:
-                return ACE;
-                break;
-            case 2:
-                return KING;
-                break;
-            case 3:
-                return QUEEN;
-                break;
-            default:
-                break;
-        }
-        return 0;
-    }
-};
+
