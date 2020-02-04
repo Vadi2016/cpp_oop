@@ -224,28 +224,40 @@ void sort(vector<int> & bar) {
 }
 
 
-enum CardSuit { HEARTS, DIAMONDS, SPADES, CLUBS };
-enum CardValue { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, KING = 10, QUEEN = 10, JACK = 10 };
+
 class Card
 {
-private:
-    CardSuit currentSuit;
-    CardValue currentValue;
-    bool situation;
+
 public:
-    bool Flip()
+    enum CardSuit { HEARTS, DIAMONDS, SPADES, CLUBS };
+    enum CardValue { ACE = 1, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, KING = 10, QUEEN = 10, JACK = 10 };
+    
+    Card(CardValue v, CardSuit s, bool f) : m_currentValue(v), m_currentSuit(s), m_situation(f) {}
+    
+    void Flip()
     {
-        if (situation)
-            situation = false;
-        else
-            situation = true;
-        return situation;
+        m_situation = !(m_situation);
     }
     
     int GetValue() const
     {
-        return currentValue;
+        int value = 0;
+        if (m_situation)
+        {
+            value = m_currentValue;
+            if (value > 10)
+            {
+                value = 10;
+            }
+                    
+        }
+        return value;
     }
+    
+private:
+    CardSuit m_currentSuit;
+    CardValue m_currentValue;
+    bool m_situation;
 };
 
 
@@ -253,33 +265,68 @@ public:
 class Hand
 {
 private:
-    vector<Card*> m_cards;
+    vector<Card*> m_Cards;
 public:
-    Hand(vector<Card*> cards): m_cards(cards) { }
-    
-    void Add(Card* n)
+    Hand()
     {
-        m_cards.push_back(n);
+        m_Cards.reserve(7);
+    }
+    
+    virtual ~Hand()
+    {
+        Clear();
+    }
+    
+    void Add(Card* pCard)
+    {
+        m_Cards.push_back(pCard);
     }
     
     void Clear()
     {
-        m_cards.clear();
+        vector<Card*>::iterator iter = m_Cards.begin();
+        for (iter = m_Cards.begin(); iter != m_Cards.end(); ++iter)
+        {
+            delete *iter;
+            *iter = 0;
+        }
+        m_Cards.clear();
     }
     
-    int GetTotal()
+    int GetTotal() const
     {
-        
-        int summ = 0;
-        for (int i = 0; i < m_cards.size(); ++i)
+        if (m_Cards.empty())
         {
-            if (m_cards[i]->GetValue() == 1 && summ <= 10) {
-                summ += 11;
-            } else {
-                summ += m_cards[i]->GetValue();
+            return 0;
+        }
+        
+        if (m_Cards[0]->GetValue() == 0)
+        {
+            return 0;
+        }
+        
+        int total = 0;
+        vector<Card*>::const_iterator iter;
+        for (iter = m_Cards.begin(); iter != m_Cards.end(); ++iter)
+        {
+            total += (*iter)->GetValue();
+        }
+        
+        bool containsAce = false;
+        for (iter = m_Cards.begin(); iter != m_Cards.end(); ++iter)
+        {
+            if ((*iter)->GetValue() == Card::ACE)
+            {
+                containsAce = true;
             }
         }
-        return summ;
+        
+        if (containsAce && total <= 11)
+        {
+            total += 10;
+        }
+        
+        return total;
     }
     
 };
